@@ -36,26 +36,27 @@ public class RequestFilter implements Filter {
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-	 	   // TODO Auto-generated method stub
-		  // place your code here
+		  
 		  HttpServletRequest req = (HttpServletRequest) request;
           HttpServletResponse res = (HttpServletResponse) response;
 	      HttpSession session = req.getSession(false);
+	      RequestDispatcher rd=req.getRequestDispatcher("login.jsp");  
+	      String username=(String)req.getSession().getAttribute("username");
 	     
-	      	      
-	      if(session==null ){
-	    	  RequestDispatcher rd=req.getRequestDispatcher("login.jsp");  
-		      rd.include(req, res);  
-	      }else{
-		       // pass the request along the filter chain
+	      
+	   try{    
+	         if(username!=null){
 		        chain.doFilter(req, res);
-	       }
+	         }else{  
+		         rd.include(req, res); 
+	         }
 	       
-	}
+	       }catch(NullPointerException e){  
+	           rd.include(req, res); 
+	       } 
+	    }
 
-	/**
-	 * @see Filter#init(FilterConfig)
-	 */
+
 	public void init(FilterConfig fConfig) throws ServletException {
 		// TODO Auto-generated method stub
 	}
